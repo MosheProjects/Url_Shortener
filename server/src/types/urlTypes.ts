@@ -1,4 +1,4 @@
-export interface Url{
+export interface Url_Interfcae{
     urlId?:string;
     origUrl?:string;
     shortUrl?:string;
