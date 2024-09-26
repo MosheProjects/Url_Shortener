@@ -23,5 +23,6 @@ const UrlSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+UrlSchema.index({ date: 1 }, { expireAfterSeconds: 1000 });
 
 export default mongoose.model('Url', UrlSchema);

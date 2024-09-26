@@ -6,6 +6,10 @@ export const shorten = async (origUrl: string) => {
   });
 };
 
-export const redirect = async (id: string) => {
+export const redirectToOrig = async (id: string) => {
   return await axiosInstance.get(`/${id}`);
+};
+
+export const getAllUrls = async () => {
+  return await axiosInstance.get('/allUrls');
 };
