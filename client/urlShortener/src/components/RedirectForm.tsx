@@ -4,21 +4,22 @@ import { useState, useRef } from "react";
 import { Url } from "../types/urlType";
 
 const RedirectForm = () => {
-  const [url, setUrl] = useState<Url | string>();
   const [error, setError] = useState<string | boolean>(false);
   const [shortUrl, setShortUrl] = useState<string>("http://shortUrl.com");
   const redirect = async () => {
     try {
       const urlArr = shortUrl.split("/");
-      console.log(urlArr[urlArr.length - 1]);
-
       const res = await redirectToOrig(urlArr[urlArr.length - 1]);
-      setUrl(res.data);
-      setError(false);
+      const { url } = res.data;
+      if (url) {
+        const confirmation = window.confirm(`Redirecting to: ${url}. Proceed?`);
+        if (confirmation) {
+          window.location.href = url;
+        }
+      }
     } catch (error: any) {
       console.log(error.response.data);
       setError(error.response.data);
-      setUrl(undefined);
     }
   };
 
@@ -42,10 +43,9 @@ const RedirectForm = () => {
           placeholder="http://shortUrl.com..."
         />
         <Button variant="contained" onClick={redirect}>
-          Shorten
+          Redirect
         </Button>
       </Box>{" "}
-      <h2>{url?.toString()}</h2>
     </Box>
   );
 };

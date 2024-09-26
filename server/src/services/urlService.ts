@@ -5,10 +5,7 @@ import { nanoid } from "nanoid";
 import * as Redis from "redis";
 
 const redisClient = Redis.createClient({
-  socket: {
-    host: "redis",
-    port: 6379,
-  },
+  url: "redis://redis:6379",
 });
 
 export const connectRedis = async () => {
@@ -16,18 +13,17 @@ export const connectRedis = async () => {
 };
 export const redirectUrl = async (req: Request, res: Response) => {
   const { shortId } = req.params;
-  connectRedis();
   const expirationTimeInSeconds = 10000;
+  updateCounter(shortId);
   const data = await redisClient.get(shortId);
-
   if (data != null) {
-    return res.redirect(data);
+    return res.json({ url: data });
   } else {
     try {
       const url = await Url.findOne({ urlId: shortId });
       if (url) {
         redisClient.setEx(shortId, expirationTimeInSeconds, url.origUrl);
-        return res.redirect(url.origUrl);
+        return res.json({ url: url.origUrl });
       } else {
         return res.status(404).json("URL not found");
       }
@@ -38,9 +34,17 @@ export const redirectUrl = async (req: Request, res: Response) => {
   }
 };
 
+const updateCounter = async (id: string) => {
+  await Url.updateOne(
+    {
+      urlId: id,
+    },
+    { $inc: { clicks: 1 } }
+  );
+};
 export const shortenUrl = async (req: Request, res: Response) => {
   const { origUrl } = req.body;
-  const base = process.env.BASE_URL;
+  const base = "http://shortUrl.com";
   console.log(base);
 
   const urlId = nanoid(7);
