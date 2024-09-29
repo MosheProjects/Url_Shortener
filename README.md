@@ -34,11 +34,12 @@ Make sure you have the following installed on your machine:
 
 1. **Clone the repository:**
     \`\`\`bash
-    git clone https://github.com/MosheProjects/Url_Shortener.git
-    cd server
-    \`\`\`
+    git clone https://github.com/MosheProjects/Url_Shortener.git  \`\`\`
+ 2. **navigate to servers directory:**
+     \`\`\cd server \`\`\
+  
 
-2. **Build and run the Docker containers:**
+3. **Build and run the Docker containers:**
     \`\`\`bash
     docker-compose up --build
     \`\`\`
